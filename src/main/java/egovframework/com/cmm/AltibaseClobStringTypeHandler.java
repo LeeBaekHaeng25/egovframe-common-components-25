@@ -21,6 +21,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.apache.commons.io.IOUtils;
 import org.egovframe.rte.psl.orm.ibatis.support.AbstractLobTypeHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,6 +52,7 @@ import org.springframework.jdbc.support.lob.LobHandler;
  *   -------    --------    ---------------------------
  *   2017.03.03  조성원      시큐어코딩(ES)-부적절한 예외 처리[CWE-253, CWE-440, CWE-754]
  *   2022.11.11  김혜준      시큐어코딩 처리
+ *   2025.04.20  이백행      PMD로 소프트웨어 보안약점 진단하고 제거하기 LocalVariableNamingConventions, AssignmentInOperand
  *      </pre>
  * 
  */
@@ -86,16 +88,17 @@ public class AltibaseClobStringTypeHandler extends AbstractLobTypeHandler {
 	protected Object getResultInternal(ResultSet rs, int index, LobHandler lobHandler) throws SQLException {
 
 		Reader rd = null;
-		StringBuffer read_data = new StringBuffer("");
-		int read_length;
-		char[] buf = new char[1024];
+		StringBuffer readData = new StringBuffer("");
+//		int readLength;
+//		char[] buf = new char[1024];
 
 		try {
 			// 2022.11.11 시큐어코딩 처리
 			rd = lobHandler.getClobAsCharacterStream(rs, index);
-			while ((read_length = rd.read(buf)) != -1) {
-				read_data.append(buf, 0, read_length);
-			}
+//			while ((readLength = rd.read(buf)) != -1) {
+//				readData.append(buf, 0, readLength);
+//			}
+			readData.append(IOUtils.toString(rd));
 		} catch (IOException ie) {
 			throw new SQLException(ie.getMessage());
 			// 2011.10.10 보안점검 후속조치
@@ -110,7 +113,7 @@ public class AltibaseClobStringTypeHandler extends AbstractLobTypeHandler {
 			}
 		}
 
-		return read_data.toString();
+		return readData.toString();
 	}
 
 	@Override
