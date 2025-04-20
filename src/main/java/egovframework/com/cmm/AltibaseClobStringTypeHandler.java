@@ -16,17 +16,16 @@ package egovframework.com.cmm;
  */
 
 import java.io.IOException;
-import java.io.Reader;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.apache.commons.io.IOUtils;
 import org.egovframe.rte.psl.orm.ibatis.support.AbstractLobTypeHandler;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.support.lob.LobCreator;
 import org.springframework.jdbc.support.lob.LobHandler;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * iBATIS TypeHandler implementation for Strings that get mapped to CLOBs.
@@ -57,9 +56,8 @@ import org.springframework.jdbc.support.lob.LobHandler;
  * 
  */
 @SuppressWarnings("deprecation")
+@Slf4j
 public class AltibaseClobStringTypeHandler extends AbstractLobTypeHandler {
-
-	private static final Logger LOGGER = LoggerFactory.getLogger(AltibaseClobStringTypeHandler.class);
 
 	/**
 	 * Constructor used by iBATIS: fetches config-time LobHandler from
@@ -85,35 +83,20 @@ public class AltibaseClobStringTypeHandler extends AbstractLobTypeHandler {
 	}
 
 	@Override
-	protected Object getResultInternal(ResultSet rs, int index, LobHandler lobHandler) throws SQLException {
-
-		Reader rd = null;
-		StringBuffer readData = new StringBuffer("");
-//		int readLength;
-//		char[] buf = new char[1024];
-
+	protected Object getResultInternal(ResultSet rs, int index, LobHandler lobHandler) {
 		try {
-			// 2022.11.11 시큐어코딩 처리
-			rd = lobHandler.getClobAsCharacterStream(rs, index);
-//			while ((readLength = rd.read(buf)) != -1) {
-//				readData.append(buf, 0, readLength);
-//			}
-			readData.append(IOUtils.toString(rd));
-		} catch (IOException ie) {
-			throw new SQLException(ie.getMessage());
-			// 2011.10.10 보안점검 후속조치
-		} finally {
-			if (rd != null) {
-				try {
-					rd.close();
-					// 2017.03.03 조성원 시큐어코딩(ES)-부적절한 예외 처리[CWE-253, CWE-440, CWE-754]
-				} catch (IOException ignore) {
-					LOGGER.error("[" + ignore.getClass() + "] Connection Close : " + ignore.getMessage());
-				}
+			return IOUtils.toString(lobHandler.getClobAsCharacterStream(rs, index));
+		} catch (IOException e) {
+			if (log.isErrorEnabled()) {
+				log.error("IOException IOUtils.toString", e);
 			}
+			return null;
+		} catch (SQLException e) {
+			if (log.isErrorEnabled()) {
+				log.error("SQLException lobHandler.getClobAsCharacterStream", e);
+			}
+			return null;
 		}
-
-		return readData.toString();
 	}
 
 	@Override
