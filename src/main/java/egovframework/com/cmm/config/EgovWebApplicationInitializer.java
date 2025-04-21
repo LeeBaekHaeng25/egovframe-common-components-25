@@ -41,6 +41,7 @@ import egovframework.com.utl.wed.filter.CkFilter;
  *   2018.10.02  신용호           Facebook 관련 HiddenHttpMethodFilter 추가
  *   2018.10.26  신용호           EgovLoginPolicyFilter 추가 (IP접근처리)
  *   2018.12.03  신용호           springMultipartFilter,HTMLTagFilter 추가 (XSS방지처리)
+ *   2025-04-22  이백행           PMD로 소프트웨어 보안약점 진단하고 제거하기-CloseResource
  *      </pre>
  */
 
@@ -71,7 +72,7 @@ public class EgovWebApplicationInitializer implements WebApplicationInitializer 
 		// -------------------------------------------------------------
 		// Spring ServletContextListener 설정
 		// -------------------------------------------------------------
-		XmlWebApplicationContext rootContext = new XmlWebApplicationContext();
+		XmlWebApplicationContext rootContext = new XmlWebApplicationContext(); // NOPMD: CloseResource
 		rootContext.setConfigLocations(new String[] { "classpath*:egovframework/spring/com/**/context-*.xml" });
 		// rootContext.setConfigLocations(new String[] {
 		// "classpath*:egovframework/spring/com/context-*.xml","classpath*:egovframework/spring/com/*/context-*.xml"
@@ -84,7 +85,7 @@ public class EgovWebApplicationInitializer implements WebApplicationInitializer 
 		// -------------------------------------------------------------
 		// Spring ServletContextListener 설정
 		// -------------------------------------------------------------
-		XmlWebApplicationContext xmlWebApplicationContext = new XmlWebApplicationContext();
+		XmlWebApplicationContext xmlWebApplicationContext = new XmlWebApplicationContext(); // NOPMD: CloseResource
 		xmlWebApplicationContext.setConfigLocation("/WEB-INF/config/egovframework/springmvc/egov-com-*.xml");
 		ServletRegistration.Dynamic dispatcher = servletContext.addServlet("dispatcher",
 				new DispatcherServlet(xmlWebApplicationContext));
