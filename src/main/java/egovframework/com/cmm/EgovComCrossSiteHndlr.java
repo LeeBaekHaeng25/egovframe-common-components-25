@@ -47,8 +47,8 @@ public class EgovComCrossSiteHndlr extends BodyTagSupport {
 	// *********************************************************************
 	// Construction and initialization
 
-	private final String m_sDiffChar = "()[]{}\"',:;= \t\r\n%!+-";
-	private final String m_sArrDiffChar[] = { "&#40;", "&#41;", "&#91;", "&#93;", "&#123;", "&#125;", "&#34;", "&#39;",
+	private final String sDiffChar = "()[]{}\"',:;= \t\r\n%!+-";
+	private final String sArrDiffChar[] = { "&#40;", "&#41;", "&#91;", "&#93;", "&#123;", "&#125;", "&#34;", "&#39;",
 			"&#44;", "&#58;", "&#59;", "&#61;", " ", "\t", // " ","\t",
 			"\r", "\n", // "\r","\n",
 			"&#37;", "&#33;", "&#43;", "&#45;" };
@@ -95,7 +95,7 @@ public class EgovComCrossSiteHndlr extends BodyTagSupport {
 	public int doStartTag() throws JspException {
 		needBody = false; // reset state related to 'default'
 		this.bodyContent = null; // clean-up body (just in case container is pooling tag handlers)
-		JspWriter out = pageContext.getOut();
+		JspWriter out = pageContext.getOut(); // NOPMD: CloseResource
 		try {
 			// print value if available; otherwise, try 'default'
 			if (value != null) {
@@ -148,7 +148,7 @@ public class EgovComCrossSiteHndlr extends BodyTagSupport {
 	 * See also Util.escapeXml().
 	 */
 	public static void out(PageContext pageContext, boolean escapeXml, Object obj) throws IOException {
-		JspWriter w = pageContext.getOut();
+		JspWriter w = pageContext.getOut(); // NOPMD: CloseResource
 		if (!escapeXml) {
 			// write chars as is
 			if (obj instanceof Reader) {
@@ -178,7 +178,7 @@ public class EgovComCrossSiteHndlr extends BodyTagSupport {
 	}
 
 	public static void out2(PageContext pageContext, boolean escapeXml, Object obj) throws IOException {
-		JspWriter w = pageContext.getOut();
+		JspWriter w = pageContext.getOut(); // NOPMD: CloseResource
 		w.write(obj.toString());
 	}
 
@@ -226,14 +226,14 @@ public class EgovComCrossSiteHndlr extends BodyTagSupport {
 		int start = 0;
 		int length = text.length();
 		char[] buffer = text.toCharArray();
-		char[] cDiffChar = this.m_sDiffChar.toCharArray();
+		char[] cDiffChar = this.sDiffChar.toCharArray();
 
 		for (int i = 0; i < length; i++) {
 			char c = buffer[i];
 			booleanDiff = false;
 			for (int k = 0; k < cDiffChar.length; k++) {
 				if (c == cDiffChar[k]) {
-					sRtn = sRtn + m_sArrDiffChar[k];
+					sRtn = sRtn + sArrDiffChar[k];
 					booleanDiff = true;
 					continue;
 				}
@@ -276,14 +276,14 @@ public class EgovComCrossSiteHndlr extends BodyTagSupport {
 		int start = 0;
 		int length = text.length();
 		char[] buffer = text.toCharArray();
-		char[] cDiffChar = this.m_sDiffChar.toCharArray();
+		char[] cDiffChar = this.sDiffChar.toCharArray();
 
 		for (int i = 0; i < length; i++) {
 			char c = buffer[i];
 			booleanDiff = false;
 			for (int k = 0; k < cDiffChar.length; k++) {
 				if (c == cDiffChar[k]) {
-					sRtn = sRtn + m_sArrDiffChar[k];
+					sRtn = sRtn + sArrDiffChar[k];
 					booleanDiff = true;
 					continue;
 				}
