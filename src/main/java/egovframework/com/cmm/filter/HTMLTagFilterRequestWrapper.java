@@ -30,12 +30,13 @@ import javax.servlet.http.HttpServletRequestWrapper;
  * @see
  *
  *      <pre>
-* << 개정이력(Modification Information) >>
-*
-*   수정일              수정자              수정내용
-*  -------      --------    ---------------------------
-*   2018.03.21  신용호              getParameterMap()구현 추가
-*   2019.01.31  신용호              whiteList 태그 추가
+ * << 개정이력(Modification Information) >>
+ *
+ *   수정일              수정자              수정내용
+ *  -------      --------    ---------------------------
+ *   2018.03.21  신용호              getParameterMap()구현 추가
+ *   2019.01.31  신용호              whiteList 태그 추가
+ *   2025.04.24  이백행              PMD로 소프트웨어 보안약점 진단하고 제거하기-SimplifyBooleanExpressions, AvoidReassigningParameters
  *      </pre>
  */
 
@@ -122,7 +123,7 @@ public class HTMLTagFilterRequestWrapper extends HttpServletRequestWrapper {
 			char c = value.charAt(i);
 			switch (c) {
 			case '<':
-				if (checkNextWhiteListTag(i, value) == false) {
+				if (!checkNextWhiteListTag(i, value)) {
 					strBuff.append("&lt;");
 				} else {
 					strBuff.append(c);
@@ -131,7 +132,7 @@ public class HTMLTagFilterRequestWrapper extends HttpServletRequestWrapper {
 				// value));
 				break;
 			case '>':
-				if (checkPrevWhiteListTag(i, value) == false) {
+				if (!checkPrevWhiteListTag(i, value)) {
 					strBuff.append("&gt;");
 				} else {
 					strBuff.append(c);
@@ -163,8 +164,7 @@ public class HTMLTagFilterRequestWrapper extends HttpServletRequestWrapper {
 			}
 		}
 
-		value = strBuff.toString();
-		return value;
+		return strBuff.toString();
 	}
 
 	private boolean checkNextWhiteListTag(int index, String data) {
