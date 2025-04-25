@@ -19,7 +19,6 @@ import java.io.IOException;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -42,13 +41,11 @@ import javax.servlet.http.HttpServletResponse;
  *  수정일               수정자           수정내용
  *  ----------   --------   ---------------------------
  *  2020.06.17   신용호            최초 생성
+ *  2025.04.25   이백행            PMD로 소프트웨어 보안약점 진단하고 제거하기-UncommentedEmptyMethodBody
  *      </pre>
  */
 
 public class SessionTimeoutCookieFilter implements Filter {
-
-	@SuppressWarnings("unused")
-	private FilterConfig config;
 
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
@@ -88,13 +85,4 @@ public class SessionTimeoutCookieFilter implements Filter {
 		chain.doFilter(request, response);
 	}
 
-	@Override
-	public void init(FilterConfig config) throws ServletException {
-		this.config = config;
-	}
-
-	@Override
-	public void destroy() {
-
-	}
 }
