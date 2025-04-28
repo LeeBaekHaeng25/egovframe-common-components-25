@@ -33,7 +33,6 @@ import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import egovframework.com.cmm.EgovWebUtil;
-import egovframework.com.cmm.util.EgovResourceCloseHelper;
 
 /**
  * @author 공통 서비스 개발팀 이삼섭
@@ -50,6 +49,7 @@ import egovframework.com.cmm.util.EgovResourceCloseHelper;
  *   2017.03.03   조성원            시큐어코딩(ES)-부적절한 예외 처리[CWE-253, CWE-440, CWE-754]
  *   2020.10.26   신용호            parseFileInf(List<MultipartFile> files ...) 추가
  *   2022.11.11   김혜준            시큐어코딩 처리
+ *   2025.04.28   이백행            PMD로 소프트웨어 보안약점 진단하고 제거하기-FormalParameterNamingConventions, CloseResource, LocalVariableNamingConventions, AssignmentInOperand
  *               </pre>
  * 
  * @see
@@ -74,7 +74,7 @@ public class EgovFileMngUtil {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<FileVO> parseFileInf(Map<String, MultipartFile> files, String KeyStr, int fileKeyParam,
+	public List<FileVO> parseFileInf(Map<String, MultipartFile> files, String keyStr, int fileKeyParam,
 			String atchFileId, String storePath) throws Exception {
 		int fileKey = fileKeyParam;
 
@@ -119,7 +119,7 @@ public class EgovFileMngUtil {
 
 			// 2022.11.11 시큐어코딩 처리
 			String fileExt = FilenameUtils.getExtension(orginFileName).toUpperCase();
-			String newName = KeyStr + getTimeStamp() + fileKey;
+			String newName = keyStr + getTimeStamp() + fileKey;
 			long size = file.getSize();
 			String filePath = storePathString + File.separator + newName;
 			file.transferTo(new File(EgovWebUtil.filePathBlackList(filePath)));
@@ -147,7 +147,7 @@ public class EgovFileMngUtil {
 	 * @return
 	 * @throws Exception
 	 */
-	public List<FileVO> parseFileInf(List<MultipartFile> files, String KeyStr, int fileKeyParam, String atchFileId,
+	public List<FileVO> parseFileInf(List<MultipartFile> files, String keyStr, int fileKeyParam, String atchFileId,
 			String storePath) throws Exception {
 		int fileKey = fileKeyParam;
 
@@ -189,7 +189,7 @@ public class EgovFileMngUtil {
 
 			// 2022.11.11 시큐어코딩 처리
 			String fileExt = FilenameUtils.getExtension(orginFileName).toUpperCase();
-			String newName = KeyStr + getTimeStamp() + fileKey;
+			String newName = keyStr + getTimeStamp() + fileKey;
 			long size = file.getSize();
 			String filePath = storePathString + File.separator + newName;
 			file.transferTo(new File(EgovWebUtil.filePathBlackList(filePath)));
@@ -220,32 +220,20 @@ public class EgovFileMngUtil {
 	 * @throws Exception
 	 */
 	protected void writeUploadedFile(MultipartFile file, String newName) throws Exception {
-		InputStream stream = null;
-		OutputStream bos = null;
+		File cFile = new File(FILE_STORE_PATH);
 
-		try {
-			stream = file.getInputStream();
-			File cFile = new File(FILE_STORE_PATH);
-
-			if (!cFile.isDirectory()) {
-				boolean _flag = cFile.mkdir();
-				if (!_flag) {
-					throw new IOException("Directory creation Failed ");
-				}
+		if (!cFile.isDirectory()) {
+			boolean flag = cFile.mkdir();
+			if (!flag) {
+				throw new IOException("Directory creation Failed ");
 			}
+		}
 
-			String writeFilePath = EgovWebUtil
-					.filePathBlackList(FILE_STORE_PATH + File.separator + FilenameUtils.getName(newName));
-			bos = new FileOutputStream(writeFilePath);
+		String writeFilePath = EgovWebUtil
+				.filePathBlackList(FILE_STORE_PATH + File.separator + FilenameUtils.getName(newName));
 
-			int bytesRead = 0;
-			byte[] buffer = new byte[BUFF_SIZE];
-
-			while ((bytesRead = stream.read(buffer, 0, BUFF_SIZE)) != -1) {
-				bos.write(buffer, 0, bytesRead);
-			}
-		} finally {
-			EgovResourceCloseHelper.close(bos, stream);
+		try (InputStream stream = file.getInputStream(); OutputStream bos = new FileOutputStream(writeFilePath);) {
+			FileCopyUtils.copy(stream, bos);
 		}
 	}
 
@@ -285,8 +273,6 @@ public class EgovFileMngUtil {
 			throw new FileNotFoundException(downFileName);
 		}
 
-		byte[] buffer = new byte[BUFF_SIZE]; // buffer size 2K.
-
 		response.setContentType("application/x-msdownload");
 		response.setHeader("Content-Disposition:",
 				"attachment; filename=" + new String(orgFileName.getBytes(), "UTF-8"));
@@ -294,19 +280,9 @@ public class EgovFileMngUtil {
 		response.setHeader("Pragma", "no-cache");
 		response.setHeader("Expires", "0");
 
-		BufferedInputStream fin = null;
-		BufferedOutputStream outs = null;
-
-		try {
-			fin = new BufferedInputStream(new FileInputStream(file));
-			outs = new BufferedOutputStream(response.getOutputStream());
-			int read = 0;
-
-			while ((read = fin.read(buffer)) != -1) {
-				outs.write(buffer, 0, read);
-			}
-		} finally {
-			EgovResourceCloseHelper.close(outs, fin);
+		try (InputStream fin = new FileInputStream(file);
+				BufferedOutputStream outs = new BufferedOutputStream(response.getOutputStream());) {
+			FileCopyUtils.copy(fin, outs);
 		}
 	}
 
@@ -350,33 +326,21 @@ public class EgovFileMngUtil {
 	 * @throws Exception
 	 */
 	protected static void writeFile(MultipartFile file, String newName) throws Exception {
-		InputStream stream = null;
-		OutputStream bos = null;
+		File cFile = new File(EgovWebUtil.filePathBlackList(FILE_STORE_PATH));
 
-		try {
-			stream = file.getInputStream();
-			File cFile = new File(EgovWebUtil.filePathBlackList(FILE_STORE_PATH));
-
-			if (!cFile.isDirectory()) {
-				// 2017.03.03 조성원 시큐어코딩(ES)-부적절한 예외 처리[CWE-253, CWE-440, CWE-754]
-				if (cFile.mkdirs()) {
-					LOGGER.debug("[file.mkdirs] saveFolder : Creation Success ");
-				} else {
-					LOGGER.error("[file.mkdirs] saveFolder : Creation Fail ");
-				}
+		if (!cFile.isDirectory()) {
+			// 2017.03.03 조성원 시큐어코딩(ES)-부적절한 예외 처리[CWE-253, CWE-440, CWE-754]
+			if (cFile.mkdirs()) {
+				LOGGER.debug("[file.mkdirs] saveFolder : Creation Success ");
+			} else {
+				LOGGER.error("[file.mkdirs] saveFolder : Creation Fail ");
 			}
+		}
 
-			bos = new FileOutputStream(
-					EgovWebUtil.filePathBlackList(FILE_STORE_PATH + File.separator + FilenameUtils.getName(newName)));
-
-			int bytesRead = 0;
-			byte[] buffer = new byte[BUFF_SIZE];
-
-			while ((bytesRead = stream.read(buffer, 0, BUFF_SIZE)) != -1) {
-				bos.write(buffer, 0, bytesRead);
-			}
-		} finally {
-			EgovResourceCloseHelper.close(bos, stream);
+		try (InputStream stream = file.getInputStream();
+				OutputStream bos = new FileOutputStream(EgovWebUtil
+						.filePathBlackList(FILE_STORE_PATH + File.separator + FilenameUtils.getName(newName)));) {
+			FileCopyUtils.copy(stream, bos);
 		}
 	}
 
@@ -404,11 +368,7 @@ public class EgovFileMngUtil {
 
 		int fSize = (int) file.length();
 		if (fSize > 0) {
-			BufferedInputStream in = null;
-
-			try {
-				in = new BufferedInputStream(new FileInputStream(file));
-
+			try (BufferedInputStream in = new BufferedInputStream(new FileInputStream(file));) {
 				String mimetype = "application/x-msdownload";
 
 				// response.setBufferSize(fSize);
@@ -419,8 +379,6 @@ public class EgovFileMngUtil {
 				// response.setHeader("Pragma","no-cache");
 				// response.setHeader("Expires","0");
 				FileCopyUtils.copy(in, response.getOutputStream());
-			} finally {
-				EgovResourceCloseHelper.close(in);
 			}
 			response.getOutputStream().flush();
 			response.getOutputStream().close();
