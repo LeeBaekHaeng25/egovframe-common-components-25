@@ -17,11 +17,10 @@ import java.util.Map;
  *
  *   수정일      수정자           수정내용
  *  -------    --------    ---------------------------
- *   2009-03-20  홍길동          최초 생성
- *   2016-06-07  장동한          최초 생성
- *   2017-03-03  조성원          시큐어코딩(ES)-오류 메시지를 통한 정보노출[CWE-209]
- *   2017-07-21  장동한          isEquals에서 String Character 비교 가능하도록
- *   2025-05-02  이백행          PMD로 소프트웨어 보안약점 진단하고 제거하기-FieldNamingConventions(필드 명명 규칙), UselessParentheses(쓸모없는 괄호)
+ *   2016.06.07  장동한          최초 생성
+ *   2017.03.03  조성원          시큐어코딩(ES)-오류 메시지를 통한 정보노출[CWE-209]
+ *   2017.07.21  장동한          isEquals에서 String Character 비교 가능하도록
+ *   2025.05.02  이백행          PMD로 소프트웨어 보안약점 진단하고 제거하기-FieldNamingConventions(필드 명명 규칙), UselessParentheses(쓸모없는 괄호)
  *      </pre>
  */
 
@@ -100,7 +99,7 @@ public class EgovMybatisUtil {
 			if (String.valueOf(obj2).equals(String.valueOf(obj))) {
 				return true;
 			}
-		} else if (obj instanceof Integer && obj instanceof Integer) {
+		} else if (obj instanceof Integer && obj2 instanceof Integer) {
 			if ((Integer) obj == (Integer) obj2) {
 				return true;
 			}
