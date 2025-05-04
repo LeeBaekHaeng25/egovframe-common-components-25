@@ -81,9 +81,8 @@ public class EgovUrlRewriteFilter implements Filter {
 					response.setContentType("text/html");
 
 					String httpsPath = "https" + "://" + getDomain + ":" + httpsPort + uri;
-					String site = new String(httpsPath);
 					res.setStatus(HttpServletResponse.SC_MOVED_TEMPORARILY);
-					res.setHeader("Location", EgovWebUtil.removeCRLF(site));
+					res.setHeader("Location", EgovWebUtil.removeCRLF(httpsPath));
 
 				}
 
@@ -93,9 +92,8 @@ public class EgovUrlRewriteFilter implements Filter {
 
 				String httpPath = "http" + "://" + getDomain + ":" + httpPort + uri;
 
-				String site = new String(httpPath);
 				res.setStatus(HttpServletResponse.SC_MOVED_TEMPORARILY);
-				res.setHeader("Location", EgovWebUtil.removeCRLF(site));
+				res.setHeader("Location", EgovWebUtil.removeCRLF(httpPath));
 
 			}
 		}
