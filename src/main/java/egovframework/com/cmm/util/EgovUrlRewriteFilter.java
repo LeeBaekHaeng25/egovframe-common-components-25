@@ -31,6 +31,7 @@ import egovframework.com.cmm.EgovWebUtil;
  *   2009.03.20  홍길동          최초 생성
  *   2014.09.30                최초생성
  *   2020.11.02  신용호          KISA 보안약점 조치 (CRLF 제거 조치)
+ *   2025.05.05  이백행          PMD로 소프트웨어 보안약점 진단하고 제거하기-StringInstantiation(문자열 인스턴스화)
  *
  *      </pre>
  */
