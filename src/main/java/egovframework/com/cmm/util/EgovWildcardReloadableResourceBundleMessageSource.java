@@ -26,6 +26,7 @@ import org.springframework.core.io.support.ResourcePatternResolver;
  *   수정일      수정자           수정내용
  *  -------    --------    ---------------------------
  *   2016.06.10  장동한          최초 생성
+ *   2025.05.06  이백행          PMD로 소프트웨어 보안약점 진단하고 제거하기-ImmutableField(불변필드), UnnecessarySemicolon(불필요한 세미콜론)
  *
  *      </pre>
  */
