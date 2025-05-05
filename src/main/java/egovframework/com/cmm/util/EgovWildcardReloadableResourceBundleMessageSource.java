@@ -32,7 +32,7 @@ import org.springframework.core.io.support.ResourcePatternResolver;
 
 public class EgovWildcardReloadableResourceBundleMessageSource
 		extends org.springframework.context.support.ReloadableResourceBundleMessageSource {
-	private ResourcePatternResolver resourcePatternResolver = new PathMatchingResourcePatternResolver();
+	private final ResourcePatternResolver resourcePatternResolver = new PathMatchingResourcePatternResolver();
 
 	public void setEgovBasenames(String... basenames) {
 		if (basenames != null) {
@@ -63,7 +63,6 @@ public class EgovWildcardReloadableResourceBundleMessageSource
 								if (baseNames.indexOf(baseName) > -1) {
 									continue;
 								}
-								;
 
 							} else if (resource instanceof ClassPathResource) {
 								baseName = StringUtils.substringBefore(uri, ".properties");
