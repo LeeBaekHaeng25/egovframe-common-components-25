@@ -334,6 +334,12 @@
 			<groupId>net.sourceforge.ajaxtags</groupId>
 			<artifactId>ajaxtags-resources</artifactId>
 			<version>1.5.7</version>
+			<exclusions>
+				<exclusion>
+					<groupId>commons-lang</groupId>
+					<artifactId>commons-lang</artifactId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 		<!-- WYSIWYG Editor -->
