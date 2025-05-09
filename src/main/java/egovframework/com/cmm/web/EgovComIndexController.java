@@ -6,6 +6,7 @@ import java.util.TreeMap;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.lang3.math.NumberUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,13 +79,7 @@ public class EgovComIndexController {
 	public String setContent(ModelMap model) throws Exception {
 
 		// 설정된 비밀번호 유효기간을 가져온다. ex) 180이면 비밀번호 변경후 만료일이 앞으로 180일
-		String propertyExpirePwdDay = EgovProperties.getProperty("Globals.ExpirePwdDay");
-		int expirePwdDay = 0;
-		try {
-			expirePwdDay = Integer.parseInt(propertyExpirePwdDay);
-		} catch (NumberFormatException Nfe) {
-			LOGGER.debug("convert expirePwdDay Err : " + Nfe.getMessage());
-		}
+		int expirePwdDay = NumberUtils.toInt(EgovProperties.getProperty("Globals.ExpirePwdDay"));
 
 		model.addAttribute("expirePwdDay", expirePwdDay);
 
