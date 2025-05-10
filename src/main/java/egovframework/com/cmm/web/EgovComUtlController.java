@@ -4,16 +4,14 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.egovframe.rte.fdl.property.EgovPropertyService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.raonsecure.omnione.core.eoscommander.util.StringUtils;
-
 import egovframework.com.cmm.EgovWebUtil;
-import org.egovframe.rte.fdl.property.EgovPropertyService;
 
 /**
  * @Class Name : EgovComUtlController.java
@@ -21,7 +19,7 @@ import org.egovframe.rte.fdl.property.EgovPropertyService;
  * @Modification Information
  * 
  *               <pre>
- * @
+ * &#64;
  * &#64; 수정일              수정자          수정내용
  * &#64; ----------  --------  ---------------------------
  *   2009.03.02  조재영      최초 생성
@@ -30,7 +28,7 @@ import org.egovframe.rte.fdl.property.EgovPropertyService;
  *   2019.04.25  신용호      moveToPage() 화이트리스트 처리
  *   2022.11.11  김혜준      시큐어코딩 처리
  *   2023.05.23  신용호      moveToPage() 추가 보완 조치
- *               </pre>
+ * </pre>
  * 
  * @author 공통서비스 개발팀 조재영
  * @since 2009.03.02
