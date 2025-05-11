@@ -1,6 +1,5 @@
 package egovframework.com.cmm.web;
 
-import org.apache.commons.lang.StringUtils;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -15,6 +14,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.egovframe.rte.fdl.cryptography.EgovEnvCryptoService;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.FileCopyUtils;
@@ -75,9 +75,10 @@ public class EgovFileDownloadController {
 
 		if (isAuthenticated) {
 
-			// 암호화된 atchFileId 를 복호화하고 동일한 세션인 경우만 다운로드할 수 있다. (2022.12.06 추가) - 파일아이디가 유추 불가능하도록 조치
+			// 암호화된 atchFileId 를 복호화하고 동일한 세션인 경우만 다운로드할 수 있다. (2022.12.06 추가) - 파일아이디가 유추
+			// 불가능하도록 조치
 			String param_atchFileId = (String) commandMap.get("atchFileId");
-	    	param_atchFileId = param_atchFileId.replaceAll(" ", "+");
+			param_atchFileId = param_atchFileId.replaceAll(" ", "+");
 			byte[] decodedBytes = Base64.getDecoder().decode(param_atchFileId);
 			String decodedString = cryptoService.decrypt(new String(decodedBytes));
 			String decodedSessionId = StringUtils.substringBefore(decodedString, "|");
