@@ -70,11 +70,11 @@ public class EgovFileMngController {
 	public String selectFileInfs(@ModelAttribute("searchVO") FileVO fileVO, HttpServletRequest request,
 			@RequestParam Map<String, Object> commandMap, ModelMap model) throws Exception {
 
-		String param_atchFileId = (String) commandMap.get("param_atchFileId");
+		String atchFileId = (String) commandMap.get("param_atchFileId");
 		String decodedAtchFileId = "";
 
-		if (param_atchFileId != null && !"".equals(param_atchFileId)) {
-			decodedAtchFileId = cryptoService.decrypt(param_atchFileId);
+		if (atchFileId != null && !"".equals(atchFileId)) {
+			decodedAtchFileId = cryptoService.decrypt(atchFileId);
 		}
 
 		fileVO.setAtchFileId(decodedAtchFileId);
@@ -90,7 +90,7 @@ public class EgovFileMngController {
 		model.addAttribute("fileList", result);
 		model.addAttribute("updateFlag", "N");
 		model.addAttribute("fileListCnt", result.size());
-		model.addAttribute("atchFileId", param_atchFileId);
+		model.addAttribute("atchFileId", atchFileId);
 
 		return "egovframework/com/cmm/fms/EgovFileList";
 	}
@@ -111,11 +111,11 @@ public class EgovFileMngController {
 			// SessionVO sessionVO,
 			HttpServletRequest request, ModelMap model) throws Exception {
 
-		String param_atchFileId = (String) commandMap.get("param_atchFileId");
+		String atchFileId = (String) commandMap.get("param_atchFileId");
 		String decodedAtchFileId = "";
 
-		if (param_atchFileId != null && !"".equals(param_atchFileId)) {
-			decodedAtchFileId = cryptoService.decrypt(param_atchFileId);
+		if (atchFileId != null && !"".equals(atchFileId)) {
+			decodedAtchFileId = cryptoService.decrypt(atchFileId);
 		}
 
 		fileVO.setAtchFileId(decodedAtchFileId);
@@ -132,7 +132,7 @@ public class EgovFileMngController {
 		model.addAttribute("fileList", result);
 		model.addAttribute("updateFlag", "Y");
 		model.addAttribute("fileListCnt", result.size());
-		model.addAttribute("atchFileId", param_atchFileId);
+		model.addAttribute("atchFileId", atchFileId);
 
 		return "egovframework/com/cmm/fms/EgovFileList";
 	}
