@@ -46,6 +46,7 @@ import egovframework.com.cmm.service.FileVO;
  *   2014.03.31  유지보수         fileSn 오류수정
  *   2018.08.31  이정은          MimeType 중복설정 제거
  *   2019.11.29  신용호          KISA 보안약점 조치 : HTTP응답분할(HTTP_Response_Splitting,CRLF)취약점 조치
+ *   2025.05.14  이백행          PMD로 소프트웨어 보안약점 진단하고 제거하기-LocalVariableNamingConventions(지역 변수 명명 규칙), CloseResource(리소스 닫기), AssignmentInOperand(피연산자의 할당)
  *
  *      </pre>
  */
