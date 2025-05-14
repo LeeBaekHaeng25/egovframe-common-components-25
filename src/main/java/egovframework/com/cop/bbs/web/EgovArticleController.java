@@ -425,7 +425,7 @@ public class EgovArticleController {
 		master.setUniqId((user == null || user.getUniqId() == null) ? "" : user.getUniqId());
 
 		master = egovBBSMasterService.selectBBSMasterInf(master);
-		boardVO = egovArticleService.selectArticleDetail(boardVO);
+		BoardVO result = egovArticleService.selectArticleDetail(boardVO);
 
 		// ----------------------------
 		// 기본 BBS template 지정
@@ -435,11 +435,11 @@ public class EgovArticleController {
 		}
 
 		model.addAttribute("boardMasterVO", master);
-		model.addAttribute("result", boardVO);
+		model.addAttribute("result", result);
 
 		model.addAttribute("articleVO", articleVO);
 
-		if (boardVO.getBlogAt().equals("chkBlog")) {
+		if (result.getBlogAt().equals("chkBlog")) {
 			return "egovframework/com/cop/bbs/EgovArticleBlogReply";
 		} else {
 			return "egovframework/com/cop/bbs/EgovArticleReply";
@@ -668,8 +668,8 @@ public class EgovArticleController {
 				FileVO fvo = new FileVO();
 				fvo.setAtchFileId(atchFileId);
 				int cnt = fileMngService.getMaxFileSN(fvo);
-				List<FileVO> _result = fileUtil.parseFileInf(files, "BBS_", cnt, atchFileId, "");
-				fileMngService.updateFileInfs(_result);
+				List<FileVO> fvoList = fileUtil.parseFileInf(files, "BBS_", cnt, atchFileId, "");
+				fileMngService.updateFileInfs(fvoList);
 			}
 		}
 
