@@ -167,15 +167,17 @@ public class EgovSndngMailDetailController {
 			response.getOutputStream().close();
 		} else {
 			response.setContentType("application/x-msdownload");
-			PrintWriter printwriter = response.getWriter();
-			printwriter.println("<html>");
-			printwriter.println(
-					"<br><br><br><h2>Could not get file name:<br>" + EgovWebUtil.clearXSSMinimum(xmlFile) + "</h2>");
-			printwriter.println("<br><br><br><center><h3><a href='javascript: history.go(-1)'>Back</a></h3></center>");
-			printwriter.println("<br><br><br>&copy; webAccess");
-			printwriter.println("</html>");
-			printwriter.flush();
-			printwriter.close();
+			try (PrintWriter printwriter = response.getWriter();) {
+				printwriter.println("<html>");
+				printwriter.println("<br><br><br><h2>Could not get file name:<br>"
+						+ EgovWebUtil.clearXSSMinimum(xmlFile) + "</h2>");
+				printwriter
+						.println("<br><br><br><center><h3><a href='javascript: history.go(-1)'>Back</a></h3></center>");
+				printwriter.println("<br><br><br>&copy; webAccess");
+				printwriter.println("</html>");
+				printwriter.flush();
+				printwriter.close();
+			}
 		}
 	}
 }
